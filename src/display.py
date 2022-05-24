@@ -1,5 +1,7 @@
-import pygame , random
-
+import pygame , random, mouse, os
+x = 100
+y = 100
+os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (x,y)
 class Display:
     def __init__(self):
         #Variables
@@ -20,7 +22,7 @@ class Display:
 
         #Objects
         self.__game_display = None
-        self.__icon = pygame.image.load("./assets/DVD_logo.png")
+        self.__icon = pygame.image.load("./assets/icon.png")
         self.__clock = pygame.time.Clock()
 
     #Display DVD
@@ -32,10 +34,10 @@ class Display:
         self.__dvd_y += self.__dvd_speed[1]
 
         #Side Collision Check
-        if self.__dvd_x <= 0 or (self.__dvd_x >= self.__screen_width - 75):
+        if self.__dvd_x <= 0 or (self.__dvd_x >= self.__screen_width - 5):#75
             self.__side_hit += 1
             self.__dvd_speed[0] = -self.__dvd_speed[0]
-        if self.__dvd_y <= -20 or self.__dvd_y >=  (self.__screen_height - 60):
+        if self.__dvd_y <= -10 or self.__dvd_y >=  (self.__screen_height - 15):
             self.__side_hit += 1
             self.__dvd_speed[1] = -self.__dvd_speed[1]
 
@@ -48,7 +50,10 @@ class Display:
             self.__corner_hit += 1
         if self.__dvd_x == (self.__screen_width - 80) and self.__dvd_y == 0:
             self.__corner_hit += 1
-
+        
+        cordStringList = os.environ['SDL_VIDEO_WINDOW_POS'].split(',')
+        cordList = [int(cordStringList[0]),int(cordStringList[1])]
+        mouse.move(x=self.__dvd_x+ cordList[0],y=self.__dvd_y + cordList[1])
         self.__game_display.blit(dvd , [self.__dvd_x , self.__dvd_y])
 
     #Display Stats
@@ -75,7 +80,7 @@ class Display:
 
         #Display Setup
         self.__game_display = pygame.display.set_mode(self.__screen_size)
-        pygame.display.set_caption("DVD Sreensaver Hits The Corner!")
+        pygame.display.set_caption("Cursor Hits The Corner!")
         pygame.display.set_icon(self.__icon)
 
         #Main Loop
